@@ -1,0 +1,54 @@
+/* body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+} */
+
+:root {
+  background-color: lightgrey;
+}
+
+main {
+  padding: 35px;
+  background-color: lightgrey;
+}
+
+/* html {
+  background-color: lightgrey;
+} */
+
+a {
+  /* color: #00B7FF; */
+  color: rgb(20, 193, 173);
+}
+
+.navbar-title-h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+.navbar-brand der {
+  align-items: flex-end;
+}
+
+/* .logIn-SignUp {
+  width: 500px;
+  background-color: blue;
+} */
+
+.padre-logIn-SignUp {
+  width: 100%;
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: lightgrey;
+}
+
+.hijo-logIn-SignUp {
+  width: 500px;
+  background-color: lightgrey;
+}
+
+.centrado {
+  text-align: center;
+}

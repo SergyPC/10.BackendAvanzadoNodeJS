@@ -1,0 +1,21 @@
+{
+	"Welcome to": "Bienvenido a",
+	"Contact": "Contacto",
+	"Invalid credentials": "Credenciales inválidas",
+	"Privado": "Privado",
+	"Private content": "Contenido Privado",
+	"Login": "Conéctate",
+	"Logout": "Desconéctate",
+	"Connected to MongoDB in": "Conectado a MongoDB en",
+	"Connection error": "Error de conexión",
+	"ES/EN": "ES/EN",
+	"EN": "EN",
+	"ES": "ES",
+	"Please log in": "Por favor, Inicia sesión",
+	"Please sign in": "Por favor, Regístrate",
+	"Email address": "Dirección de Email",
+	"Password": "Contraseña",
+	"Remember me": "Recuérdame",
+	"Log in": "Iniciar sesión",
+	"Sign in": "Registrarse"
+}

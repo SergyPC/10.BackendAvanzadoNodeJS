@@ -1,0 +1,21 @@
+{
+	"Welcome to": "Welcome to",
+	"Contact": "Contact",
+	"Invalid credentials": "Invalid credentials",
+	"Privado": "Privado",
+	"Private content": "Private content",
+	"Login": "Login",
+	"Logout": "Logout",
+	"Connected to MongoDB in": "Connected to MongoDB in",
+	"Connection error": "Connection error",
+	"ES/EN": "ES/EN",
+	"EN": "EN",
+	"ES": "ES",
+	"Please log in": "Please log in",
+	"Please sign in": "Please sign in",
+	"Email address": "Email address",
+	"Password": "Password",
+	"Remember me": "Remember me",
+	"Log in": "Log in",
+	"Sign in": "Sign in"
+}
