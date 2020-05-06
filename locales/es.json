@@ -17,5 +17,11 @@
 	"Password": "Contraseña",
 	"Remember me": "Recuérdame",
 	"Log in": "Iniciar sesión",
-	"Sign in": "Registrarse"
+	"Sign in": "Registrarse",
+	"There aren't results with the specified search parameters.": "No hay resultados con los parámetros de búsqueda especificados.",
+	"Verify that:": "Verifica que:",
+	"The sell value can be:": "El valor de venta puede ser:",
+	"The tags value can be:": "El valor de las etiquetas/tags puede ser:",
+	"The price value can be:": "El valor del precio puede ser:",
+	"The decimal price separator must be": "El separador de precio decimal debe ser"
 }

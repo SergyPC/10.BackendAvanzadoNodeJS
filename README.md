@@ -79,22 +79,6 @@ http://localhost:3000/
 
 <br />
 
-**GET /api/v1/tags** (http://localhost:3000/api/v1/tags)
-
-> Returns an array with the distinct tags from tags collection.
-
-#### - Result:
-```shell
-[
-  "lifestyle",
-  "mobile",
-  "motor",
-  "work"
-]
-```
-
-<br />
-
 **GET /api/v1/anuncios** (http://localhost:3000/api/v1/anuncios)
 <br />
 **Header: Authorization: token**
@@ -364,4 +348,20 @@ DELETE > http://localhost:3000/api/v1/anuncios/5e9080d470f90f1ee8ade083
 #### - Result:
 ```shell
 //Returns a Status 200 (Success OK).
+```
+
+<br />
+
+**GET /api/v1/tags** (http://localhost:3000/api/v1/tags)
+
+> Returns an array with the distinct tags from tags collection.
+
+#### - Result:
+```shell
+[
+  "lifestyle",
+  "mobile",
+  "motor",
+  "work"
+]
 ```

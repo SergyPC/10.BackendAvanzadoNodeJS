@@ -111,6 +111,14 @@ router.get('/', async (req, res, next) => {
         //else // Creamos un método estático, lista, en el modelo Anuncio.js
         //    docs = await Anuncio.lista(filter, limit, skip, sort, fields); //http://localhost:3000/api/v1/anuncios?name=iPhone
         
+        console.log('ENTRO EN ANUNCIOS.JS:');
+        console.log('filter:', filter);
+        console.log('limit:', limit);
+        console.log('skip:', skip);
+        console.log('sort:', sort);
+        console.log('fields:', fields);
+
+
         const docs = await Anuncio.lista(filter, limit, skip, sort, fields); //http://localhost:3000/api/v1/anuncios?name=iPhone
         res.json(docs);
         

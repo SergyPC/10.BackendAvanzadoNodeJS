@@ -30,7 +30,7 @@ class LoginController {
             const email = req.body.email;
             const password = req.body.password;
 
-            console.log('ENTRO EN LoginController');
+            console.log('ENTRO EN POST /login de LoginController.js');
 
             // const password = req.body.;
             // console.log('app.locals.tokenJWT:', app.locals.tokenJWT);
@@ -82,6 +82,7 @@ class LoginController {
             res.redirect('/login'); //Le podemos mandar al login para volverse a logar
         });
     }
+
     /**
      * POST /api/loginJWT
      */
@@ -107,8 +108,7 @@ class LoginController {
 
             // Crear un JWT
             const token = jwt.sign({ _id: usuario._id }, process.env.JWT_SECRET, {
-                expiresIn: '365d' //Tiempo de expiración del token
-                //expiresIn: '2d' //Tiempo de expiración del token
+                expiresIn: '7d' //Tiempo de expiración del token
             });
 
             // Responder entregando ese JWT
@@ -118,6 +118,7 @@ class LoginController {
             next(err);
         }
     }
+    
 }
 
 module.exports = new LoginController();

@@ -17,5 +17,11 @@
 	"Password": "Password",
 	"Remember me": "Remember me",
 	"Log in": "Log in",
-	"Sign in": "Sign in"
+	"Sign in": "Sign in",
+	"There aren't results with the specified search parameters.": "There aren't results with the specified search parameters.",
+	"Verify that:": "Verify that:",
+	"The sell value can be:": "The sell value can be:",
+	"The tags value can be:": "The tags value can be:",
+	"The price value can be:": "The price value can be:",
+	"The decimal price separator must be": "The decimal price separator must be"
 }

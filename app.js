@@ -67,7 +67,7 @@ const jwtAuth = require('./lib/JwtAuth'); //Cargo mi generador de middlewares de
 app.use('/api/v1/anuncios', jwtAuth(), require('./routes/api/v1/anuncios'));
 
 app.use('/api/v1/tags', require('./routes/api/v1/tags'));
-app.use('/api/v1/loginJWT', loginController.postJWT)
+app.use('/api/v1/loginJWT', loginController.postJWT);
 
 /**
  * Inicializamos el sistema de sesiones
@@ -110,10 +110,6 @@ app.use((req, res, next) => {
 
 //app.use('/', require('./routes/index'));
 app.get('/', sessionAuth(['admin']), require('./routes/index')); //sessionAuth(['admin']) --> Devuelve un middleware que valida que el usuario está logado y tiene rol necesario
-
-// app.use('/api/v1/anuncios', jwtAuth(), require('./routes/api/v1/anuncios'));
-// app.get('/', sessionAuth(['admin']), require('./routes/index')); //sessionAuth(['admin']) --> Devuelve un middleware que valida que el usuario está logado y tiene rol necesario
-
 
 // const privateController = require('./routes/privateController');
 // app.get('/', privateController.index); //Le pasamos el objeto index para que lo utilice como Midleware
