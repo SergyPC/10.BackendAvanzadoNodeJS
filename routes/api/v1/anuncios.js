@@ -15,6 +15,11 @@ const Anuncio = require('../../../models/Anuncio');
 //Validaciones En el middleware: Destructuring:
 const { query, check, validationResult } = require('express-validator');
 
+const jimp = require('jimp');
+const cote = require('cote');
+const requester = new cote.Requester({ name: 'create thumbnail' });
+
+
 /**
  * GET /api/v1/anuncios
  * Devuelve una lista de anuncios (el limite máximo por defecto es 100) pudiendo utilizar filtros
@@ -111,12 +116,12 @@ router.get('/', async (req, res, next) => {
         //else // Creamos un método estático, lista, en el modelo Anuncio.js
         //    docs = await Anuncio.lista(filter, limit, skip, sort, fields); //http://localhost:3000/api/v1/anuncios?name=iPhone
         
-        console.log('ENTRO EN ANUNCIOS.JS:');
-        console.log('filter:', filter);
-        console.log('limit:', limit);
-        console.log('skip:', skip);
-        console.log('sort:', sort);
-        console.log('fields:', fields);
+        // console.log('ENTRO EN ANUNCIOS.JS:');
+        // console.log('filter:', filter);
+        // console.log('limit:', limit);
+        // console.log('skip:', skip);
+        // console.log('sort:', sort);
+        // console.log('fields:', fields);
 
 
         const docs = await Anuncio.lista(filter, limit, skip, sort, fields); //http://localhost:3000/api/v1/anuncios?name=iPhone
@@ -183,22 +188,42 @@ router.post('/',
         check('name').isString().withMessage('should be string'),
         check('sell').isBoolean().withMessage('should be boolean'),
         check('price').isNumeric().withMessage('should be numeric'),
-        check('photo').isString().withMessage('should be string'),
+        //check('photo').isString().withMessage('should be string'),
         check('detail').isString().withMessage('should be string'),
     ],
     async (req, res, next) => {
     try {
         validationResult(req).throw(); // lanza excepción si hay errores de validación
         
+        console.log('ENTRO EN router.post(/)');
+        
+
         let anuncioData = req.body; //recogemos por el body los datos del anuncio a crear
         const tags = req.body.tags;
         const sell = req.body.sell;
         const price = req.body.price;
         let failure = false;
-        
+
+        if (typeof req.file === 'undefined') {
+            const err = new Error('The photo should be file object.'); //La venta debería ser boolean.
+            err.status = 422;
+            next(err);
+            return;
+        }
+
+        // const RegexImageExtension = RegExp("\.(gif|jpe?g|tiff|png|webp|bmp)$");
+        // if (!(RegexImageExtension.test(req.body.photo.toLowerCase()))) { //Imagen Incorrecta
+        //     const err = new Error(`Not valid (${req.body.photo}). The allowed extensions for photo are: gif|jpg|jpeg|tiff|png|webp|bmp`); //Not valid. Las extensiones permitidas para una imagen son: gif|jpg|jpeg|tiff|png|webp|bmp
+        //     err.status = 422;
+        //     next(err);
+        //     return;
+        // }
+
         const RegexImageExtension = RegExp("\.(gif|jpe?g|tiff|png|webp|bmp)$");
-        if (!(RegexImageExtension.test(req.body.photo.toLowerCase()))) { //Imagen Incorrecta
-            const err = new Error(`Not valid (${req.body.photo}). The allowed extensions for photo are: gif|jpg|jpeg|tiff|png|webp|bmp`); //Not valid. Las extensiones permitidas para una imagen son: gif|jpg|jpeg|tiff|png|webp|bmp
+        // if (!(RegexImageExtension.test(req.body.photo.toLowerCase()))) { //Imagen Incorrecta
+        if (!(RegexImageExtension.test(req.file.originalname.toLowerCase()))) { //Imagen Incorrecta
+            //const err = new Error(`Not valid (${req.body.photo}). The allowed extensions for photo are: gif|jpg|jpeg|tiff|png|webp|bmp`); //Not valid. Las extensiones permitidas para una imagen son: gif|jpg|jpeg|tiff|png|webp|bmp
+            const err = new Error(`Not valid (${req.file.originalname}). The allowed extensions for photo are: gif|jpg|jpeg|tiff|png|webp|bmp`); //Not valid. Las extensiones permitidas para una imagen son: gif|jpg|jpeg|tiff|png|webp|bmp
             err.status = 422;
             next(err);
             return;
@@ -241,6 +266,73 @@ router.post('/',
             return;
         }
 
+
+        const file = req.file;
+        //const thumbnailName = `${req.body.name}-tn.jpg`;
+        //const thumbnailsRoute = `${__dirname}/thumbnails/${thumbnailName}`;
+
+        
+
+        const arrayThumbnailName = req.file.originalname.split('.');
+        console.log("arrayThumbnailName:", arrayThumbnailName);
+
+        let thumbnailName = '';
+        for(let i = 0; i < arrayThumbnailName.length-1; i++) {
+            if (i === arrayThumbnailName.length-2)
+                thumbnailName += arrayThumbnailName[i];
+            else
+                thumbnailName += arrayThumbnailName[i] + '.';
+        }
+        thumbnailName += '-tn.' + arrayThumbnailName[arrayThumbnailName.length-1];
+        console.log("thumbnailName:", thumbnailName);
+
+        //const thumbnailName = `${req.file.originalname}-tn.jpg`;
+        //const thumbnailsRoute = `${__dirname}/thumbnails/`;
+
+        //const thumbnailsRoute = `${__dirname}`.split('routes')[0] + "public\\thumbnails\\";
+        const projectRoute = `${__dirname}`.split('routes')[0];
+        const thumbnailsRoute = `${projectRoute}\\public\\thumbnails\\`;
+        const imagesRoute = `${projectRoute}\\public\\images\\`;
+
+        
+        
+        console.log('req.body:', req.body);
+
+        console.log('req.file:', req.file);
+        console.log("req.file.path:", req.file.path);
+
+        console.log("thumbnailsRoute:", `${thumbnailsRoute}`);
+        console.log("thumbnailName:", `${thumbnailName}`);
+        console.log("Thumbnail:", `${thumbnailsRoute}${thumbnailName}`);
+
+        console.log("jimp.read:", `${file.destination}/${file.originalname}`);
+        
+        //jimp.read('./public/images/apple-macbook-air.jpg')
+        //jimp.read(file.path)
+        //jimp.read(`${file.destination}/${file.originalname}`)
+        jimp.read(file.path)
+        .then(image => {
+            return image
+            //.resize(100, 100) // resize
+            .quality(100) // set JPEG quality
+            //.greyscale() // set greyscale
+            .write(`${imagesRoute}${req.file.originalname}`); // save
+            //.write('./public/images/apple-macbook-air-thumbnail.jpg'); // save
+        })
+        .then(image => {
+            return image
+            .resize(100, 100) // resize
+            .quality(90) // set JPEG quality
+            //.greyscale() // set greyscale
+            .write(`${thumbnailsRoute}${thumbnailName}`); // save
+            //.write('./public/Route}${thumbnailName}`); // save
+            //.write('./public/images/apple-macbook-air-thumbnail.jpg'); // save
+        })
+        .catch(err => {
+            console.error(err);
+        });
+
+
         const date = new Date();
         anuncioData.createdAt = date;
         anuncioData.updatedAt = date;
@@ -248,14 +340,16 @@ router.post('/',
         // Creamos el objeto en memoria
         const anuncio = new Anuncio(anuncioData); // Le pasamos al constructor Anuncio los datos recibidos por el body
 
+        console.log('Anuncio:', anuncio);
+
         // Guardamos en la BBDD el objeto en memoria
         // la función save podría utilizarse con un callback o como una promesa.
         // Al utilizarlo como promesa nos devuelve el objeto que finalmente ha añadido a la BBDD.
-        const anuncioGuardado = await anuncio.save();
+        // const anuncioGuardado = await anuncio.save();
         
         // Y es lo que le vamos a devolver (anuncioGuardado) a quién nos haya hecho la petición al API
-        //res.json( { result: anuncioGuardado } ); // Esta respuesta devuelve un codigo de estado 200
-        res.status(201).json( { result: anuncioGuardado } ); // Esta respuesta devuelve un codigo de estado 201: Success - Created
+        // res.json( { result: anuncioGuardado } ); // Esta respuesta devuelve un codigo de estado 200
+        // res.status(201).json( { result: anuncioGuardado } ); // Esta respuesta devuelve un codigo de estado 201: Success - Created
     } catch (err) {
         next(err);
     }

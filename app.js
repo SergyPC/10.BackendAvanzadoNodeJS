@@ -5,6 +5,18 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const session = require('express-session');
 
+
+
+
+
+const multer = require('multer');
+//const upload = multer({ dest: 'uploads/' });
+const upload = multer({ dest: './public/images' });
+
+
+
+
+
 // var indexRouter = require('./routes/index');
 // var usersRouter = require('./routes/users');
 
@@ -41,7 +53,7 @@ app.locals.title = 'NodePOP';
 //app.locals.tokenJWT = 'hola';
 
 /**
- * Setup de i18n
+ * Setup de i18n (internacionalización)
  * Le ponemos al final '()' para invocarlo directamente y nos devuelva un i18n configruado.
  * Si metemos cookies hay que ponerlo por debajo de cookieParser
  */
@@ -60,14 +72,18 @@ const jwtAuth = require('./lib/JwtAuth'); //Cargo mi generador de middlewares de
  * Es recomendable que corresponda la ruta del browser con la ruta del filesystem
  * (Por si hubiera algún problema en la aplicación)
  */
-// app.use('/api/anuncios', require('./routes/api/anuncios'));
-// app.use('/api/tags', require('./routes/api/tags'));
-
 //app.use('/api/v1/anuncios', require('./routes/api/v1/anuncios'));
-app.use('/api/v1/anuncios', jwtAuth(), require('./routes/api/v1/anuncios'));
+//app.use('/api/v1/anuncios', jwtAuth(), require('./routes/api/v1/anuncios'));
+
+app.use('/api/v1/anuncios', upload.single('photo'), jwtAuth(), require('./routes/api/v1/anuncios'));
+//app.use('/api/v1/anuncios', upload.single('thumbnail'), jwtAuth(), require('./routes/api/v1/anuncios'));
+
+
+app.use('/api/v1/loginJWT', loginController.postJWT);
+
+
 
 app.use('/api/v1/tags', require('./routes/api/v1/tags'));
-app.use('/api/v1/loginJWT', loginController.postJWT);
 
 /**
  * Inicializamos el sistema de sesiones

@@ -13,7 +13,10 @@ const anuncioSchema = mongoose.Schema({
 	name: String,
 	sell: Boolean, //true (sell) or false (buy)
 	price: Number,
-	photo: String,
+    photo: String,
+
+    thumbnail: String,
+    
     tags: [String],
     detail: String,
     createdAt: Date,
