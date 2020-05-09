@@ -7,6 +7,7 @@ const { getAds, getTags } = api();
 
 // Cargamos y utilizamos el modelo de Anuncio para utilizar los diferentes métodos del API (GET, POST, PUT, DELETE...)
 const Anuncio = require('../models/Anuncio');
+const Tag = require('../models/Tag');
 
 //Validaciones En el middleware: Destructuring:
 //const { query, check, validationResult } = require('express-validator');
@@ -24,7 +25,7 @@ router.get('/', async function (req, res, next) {
     let filter = {};
     let isIncorrect = false;
 
-    console.log('ENTRO EN GET de routes/index.js');
+    //console.log('ENTRO EN GET de routes/index.js');
     
     // Eliminamos el campo __v que añade MongoDB por defecto
     //(typeof fields === 'undefined') ? fields = '-__v' : fields += ' -__v';
@@ -121,11 +122,20 @@ router.get('/', async function (req, res, next) {
     // res.json(docs);
 
     //const ads = await Anuncio.lista(filter, limit, skip, sort, fields);
-    const tagss = await getTags("?distinct=name");
+    //const tagss = await getTags("?distinct=name");
+
+    filter = {};
+    const tagss = await Tag.lista(filter, '', '', 'name', '', 'name');
+
+    //console.log('__dirname:', __dirname);
+
+    const fs = require('fs');
 
     res.render('index', {
       title: 'NodePOP',
       data: [ads, tagss],
+      __dirname: __dirname,
+      fs: fs,
     });
     
   } catch (err) {

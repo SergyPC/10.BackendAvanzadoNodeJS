@@ -116,14 +116,6 @@ router.get('/', async (req, res, next) => {
         //else // Creamos un método estático, lista, en el modelo Anuncio.js
         //    docs = await Anuncio.lista(filter, limit, skip, sort, fields); //http://localhost:3000/api/v1/anuncios?name=iPhone
         
-        // console.log('ENTRO EN ANUNCIOS.JS:');
-        // console.log('filter:', filter);
-        // console.log('limit:', limit);
-        // console.log('skip:', skip);
-        // console.log('sort:', sort);
-        // console.log('fields:', fields);
-
-
         const docs = await Anuncio.lista(filter, limit, skip, sort, fields); //http://localhost:3000/api/v1/anuncios?name=iPhone
         res.json(docs);
         
@@ -192,11 +184,68 @@ router.post('/',
         check('detail').isString().withMessage('should be string'),
     ],
     async (req, res, next) => {
+        try {
+            console.log('ENTRO EN router.post(..../1/....)');
+
+            const file = req.file;
+            const arrayThumbnailName = file.originalname.split('.');
+            let thumbnailName = '';
+            for(let i = 0; i < arrayThumbnailName.length-1; i++) {
+                if (i === arrayThumbnailName.length-2)
+                    thumbnailName += arrayThumbnailName[i];
+                else
+                    thumbnailName += arrayThumbnailName[i] + '.';
+            }
+            thumbnailName += '-tn.' + arrayThumbnailName[arrayThumbnailName.length-1];
+
+            console.log("thumbnailName:", thumbnailName);
+
+            const projectRoute = `${__dirname}`.split('routes')[0];
+            const thumbnailsRoute = `${projectRoute}\\public\\thumbnails\\`;
+            const imagesRoute = `${projectRoute}\\public\\images\\`;
+            
+            //let auxFile = `${imagesRoute}\\${file.originalname}`;
+            let auxFile = `${thumbnailsRoute}\\${thumbnailName}`;
+
+            for(let i=0; i<10; i++) {
+                auxFile = auxFile.replace("\\\\", "\\");
+            }
+
+            const fs = require('fs');
+            //Check if the file exists in the current directory.
+            fs.access(auxFile, fs.constants.F_OK, (err) => {
+                console.log(" ");console.log(" ");
+                console.log(`*****ACCEDO A FS....`);
+                // console.log(" ");console.log(" ");
+                // console.log('auxFile:', auxFile);
+                console.log(`${auxFile} (Error: ${err}) -> ${err ? 'does not exist' : 'exists'}`);
+                if(!err) {            
+                    // console.log(" ");console.log(" ");
+                    //console.log(`Not valid (${file.originalname}). The filename already exists`);
+                    console.log(`Not valid (${auxFile}). The filename already exists`);
+                    // console.log(" ");console.log(" ");
+
+                    const err = new Error(`Not valid (${file.originalname}). The filename already exists`);
+                    err.status =  422;
+                    next(err);
+                    return;
+                }
+                console.log(" ");console.log(" ");
+                console.log(`SALGO DE FS....`);
+                console.log(" ");console.log(" ");
+                next();
+            });
+
+        } catch (err) {
+            next(err);
+        }
+    }
+    ,
+    async (req, res, next) => {
     try {
         validationResult(req).throw(); // lanza excepción si hay errores de validación
         
-        console.log('ENTRO EN router.post(/)');
-        
+        console.log('ENTRO EN router.post(..../2/....)');
 
         let anuncioData = req.body; //recogemos por el body los datos del anuncio a crear
         const tags = req.body.tags;
@@ -268,14 +317,8 @@ router.post('/',
 
 
         const file = req.file;
-        //const thumbnailName = `${req.body.name}-tn.jpg`;
-        //const thumbnailsRoute = `${__dirname}/thumbnails/${thumbnailName}`;
-
-        
-
-        const arrayThumbnailName = req.file.originalname.split('.');
-        console.log("arrayThumbnailName:", arrayThumbnailName);
-
+        const arrayThumbnailName = file.originalname.split('.');
+        //console.log("arrayThumbnailName:", arrayThumbnailName);
         let thumbnailName = '';
         for(let i = 0; i < arrayThumbnailName.length-1; i++) {
             if (i === arrayThumbnailName.length-2)
@@ -284,63 +327,167 @@ router.post('/',
                 thumbnailName += arrayThumbnailName[i] + '.';
         }
         thumbnailName += '-tn.' + arrayThumbnailName[arrayThumbnailName.length-1];
+
         console.log("thumbnailName:", thumbnailName);
 
-        //const thumbnailName = `${req.file.originalname}-tn.jpg`;
-        //const thumbnailsRoute = `${__dirname}/thumbnails/`;
-
-        //const thumbnailsRoute = `${__dirname}`.split('routes')[0] + "public\\thumbnails\\";
         const projectRoute = `${__dirname}`.split('routes')[0];
         const thumbnailsRoute = `${projectRoute}\\public\\thumbnails\\`;
-        const imagesRoute = `${projectRoute}\\public\\images\\`;
+        //const imagesRoute = `${projectRoute}\\public\\images\\`;
+        
+        // console.log('req.body:', req.body);
+        // console.log('req.file:', req.file);
+        // //console.log("req.file.path:", req.file.path);
+        // console.log("thumbnailsRoute:", `${thumbnailsRoute}`);
+        // console.log("thumbnailName:", `${thumbnailName}`);
+        // console.log("Thumbnail:", `${thumbnailsRoute}${thumbnailName}`);
+        // console.log("jimp.read:", `${file.destination}/${file.originalname}`);
+
 
         
+        // const fs = require('fs');
+        // //let auxFile = `${imagesRoute}\\${file.originalname}`.replace("\\", "\ ").replace(" ", "");
         
-        console.log('req.body:', req.body);
-
-        console.log('req.file:', req.file);
-        console.log("req.file.path:", req.file.path);
-
-        console.log("thumbnailsRoute:", `${thumbnailsRoute}`);
-        console.log("thumbnailName:", `${thumbnailName}`);
-        console.log("Thumbnail:", `${thumbnailsRoute}${thumbnailName}`);
-
-        console.log("jimp.read:", `${file.destination}/${file.originalname}`);
+        // let auxFile = `${imagesRoute}\\${file.originalname}`;
+        // //let auxFile = `${imagesRoute}\\${thumbnailName}`;
         
-        //jimp.read('./public/images/apple-macbook-air.jpg')
-        //jimp.read(file.path)
-        //jimp.read(`${file.destination}/${file.originalname}`)
-        jimp.read(file.path)
-        .then(image => {
-            return image
-            //.resize(100, 100) // resize
-            .quality(100) // set JPEG quality
-            //.greyscale() // set greyscale
-            .write(`${imagesRoute}${req.file.originalname}`); // save
-            //.write('./public/images/apple-macbook-air-thumbnail.jpg'); // save
-        })
-        .then(image => {
-            return image
-            .resize(100, 100) // resize
-            .quality(90) // set JPEG quality
-            //.greyscale() // set greyscale
-            .write(`${thumbnailsRoute}${thumbnailName}`); // save
-            //.write('./public/Route}${thumbnailName}`); // save
-            //.write('./public/images/apple-macbook-air-thumbnail.jpg'); // save
-        })
-        .catch(err => {
-            console.error(err);
-        });
+        // console.log('1)auxFile:', auxFile);
+        // auxFile = auxFile.replace("\\\\", "\\");
+        // console.log('2)auxFile:', auxFile);
+        // auxFile = auxFile.replace("\\\\", "\\");
+        // console.log('3)auxFile:', auxFile);
+        // for(let i=0; i<10; i++) {
+        //     auxFile = auxFile.replace("\\\\", "\\");
+        // }
 
+        
 
-        const date = new Date();
-        anuncioData.createdAt = date;
-        anuncioData.updatedAt = date;
+        //auxFile = auxFile.replace(" ", "");
+        //console.log('3)auxFile:', auxFile);
+
+        // const fsPromises = require('fs').promises;
+        // async function openAndClose() {
+        //     let filehandle;
+        //     try {
+        //         filehandle = await fsPromises.open(auxFile, 'r');
+        //         console.log('auxFile:', auxFile);
+        //     } finally {
+        //         console.log('FINALLY...............');
+        //         if (filehandle !== undefined)
+        //             await filehandle.close();
+        //     }
+        // }
+
+        // Check if the file exists in the current directory.
+        // fs.access(auxFile, fs.constants.F_OK, (err) => {
+        //         console.log(" ");console.log(" ");
+        //         console.log(`ACCEDO A FS....`);
+        //         console.log(" ");console.log(" ");
+        //         console.log('auxFile:', auxFile);
+        //         console.log(`${auxFile} (Error: ${err}) -> ${err ? 'does not exist' : 'exists'}`);
+        //         if(!err) {
+                    
+        //             console.log(" ");console.log(" ");
+        //             //console.log(`Not valid (${file.originalname}). The filename already exists`);
+        //             console.log(`Not valid (${auxFile}). The filename already exists`);
+        //             console.log(" ");console.log(" ");
     
-        // Creamos el objeto en memoria
-        const anuncio = new Anuncio(anuncioData); // Le pasamos al constructor Anuncio los datos recibidos por el body
+        //             //const anuncioGuardado = await anuncio.save();
+    
+        //             const err = new Error(`Not valid (${file.originalname}). The filename already exists`);
+        //             err.status =  422;
+        //             next(err);
+        //             return;
+        //         }
+        //         console.log(" ");console.log(" ");
+        //         console.log(`SALGO DE FS....`);
+        //         console.log(" ");console.log(" ");
 
-        console.log('Anuncio:', anuncio);
+                
+            
+        // });
+
+        
+
+
+        console.log("JIMP");
+        console.log("file.path:", file.path);
+        jimp.read(file.path, (err, image) => {
+            console.log("Accedo a JIMP (err, image):", "( ", err, " - ", image, " )");
+            if (err) 
+                throw err;
+            image.resize(100, 100)
+                 .quality(90)
+                 .write(`${thumbnailsRoute}${thumbnailName}`);
+                 //.write(`${thumbnailsRoute}${req.file.originalname}`);
+            //image.resize(100, 100).quality(90).write(`${imagesRoute}${thumbnailName}`);
+        });
+        
+        requester.send({
+            type: 'save-thumbnail',
+            //imgToSave: `${thumbnailsRoute}${req.file.originalname}`,
+            //filename: req.file.originalname,
+            filename: thumbnailName,
+            path: thumbnailsRoute,
+        }, async (result) => {
+                try {
+                    console.log('result:', result);
+                    anuncioData.thumbnail = result;
+
+                    anuncioData.photo = req.file.originalname;
+                    const date = new Date();
+                    anuncioData.createdAt = date;
+                    anuncioData.updatedAt = date;
+
+                    const anuncio = new Anuncio(anuncioData);
+                    console.log('Anuncio:', anuncio);
+                    //await anuncio.save();
+
+                    // const anuncio = new Anuncio(anuncioData); // Le pasamos al constructor Anuncio los datos recibidos por el body
+                    // console.log('Anuncio:', anuncio);
+                    const anuncioGuardado = await anuncio.save();
+                    res.status(201).json( { result: anuncioGuardado } ); // Esta respuesta devuelve un codigo de estado 201: Success - Created
+                } 
+                catch (error) {
+                    //console.log('ERROR:', error.code, ' - ', error.number)
+                    next(error);
+                }
+            }
+        );
+
+        // //jimp.read('./public/images/apple-macbook-air.jpg')
+        // //jimp.read(file.path)
+        // //jimp.read(`${file.destination}/${file.originalname}`)
+        // jimp.read(file.path)
+        // .then(image => {
+        //     return image
+        //     //.resize(100, 100) // resize
+        //     .quality(100) // set JPEG quality
+        //     //.greyscale() // set greyscale
+        //     .write(`${imagesRoute}${req.file.originalname}`); // save
+        //     //.write('./public/images/apple-macbook-air-thumbnail.jpg'); // save
+        // })
+        // .then(image => {
+        //     return image
+        //     .resize(100, 100) // resize
+        //     .quality(90) // set JPEG quality
+        //     //.greyscale() // set greyscale
+        //     .write(`${thumbnailsRoute}${thumbnailName}`); // save
+        //     //.write('./public/Route}${thumbnailName}`); // save
+        //     //.write('./public/images/apple-macbook-air-thumbnail.jpg'); // save
+        // })
+        // .catch(err => {
+        //     console.error(err);
+        // });
+
+
+        // const date = new Date();
+        // anuncioData.createdAt = date;
+        // anuncioData.updatedAt = date;
+    
+        // // Creamos el objeto en memoria
+        // const anuncio = new Anuncio(anuncioData); // Le pasamos al constructor Anuncio los datos recibidos por el body
+
+        // console.log('Anuncio:', anuncio);
 
         // Guardamos en la BBDD el objeto en memoria
         // la función save podría utilizarse con un callback o como una promesa.

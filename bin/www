@@ -10,6 +10,25 @@ var app = require('../app'); //Carga mi aplicación app.js
 var debug = require('debug')('nodepop:server');
 var http = require('http'); //Carga la librería http
 
+const cote = require('cote'); //Carga la librería cote para los microservicios
+const responder = new cote.Responder({ name: 'thumbail creator' }); // Declarar el microservicio
+
+responder.on('save-thumbnail', (req, done) => { // Logica del servicio
+  try {
+    // console.log('ENTRO en www -> responder.on(Save-thumbnail)');
+    // console.log('req.filename:', req.filename);
+    const result = req.filename;
+    done(result);
+
+    // console.log('req.imgToSave:', req.imgToSave);
+    // const result = req.imgToSave;
+    // done(result);
+  } 
+  catch (error) {
+    console.log(error);
+  }
+});
+
 /**
  * Get port from environment and store in Express.
  */

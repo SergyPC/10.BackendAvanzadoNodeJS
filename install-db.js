@@ -38,11 +38,11 @@ async function initAnuncios() {
     const detailLoren = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
     await Anuncio.deleteMany(); //Borra todos los registros de la tabla anuncios
     await Anuncio.insertMany([  //Añadimos los registros que queramos inicializar por defecto
-        { name: 'Bicicleta eléctrica Rodars 1000W', sell: true, price: 230.15, photo: 'bicicleta-rodars-1000W.jpg', tags: ['lifestyle', 'motor'], detail: detailLoren, createdAt: date, updatedAt: date},
-        { name: 'iPhone 11Pro', sell: true, price: 50.00, photo: 'iPhone-11-pro.jpg', tags: ['lifestyle', 'mobile'], detail: detailLoren, createdAt: date, updatedAt: date },
-        { name: 'Aston Martin DBS', sell: true, price: 225630.55, photo: 'aston-martin-dbs.jpg', tags: ['lifestyle', 'motor'], detail: detailLoren, createdAt: date, updatedAt: date },
-        { name: 'MacBook Air', sell: false, price: 250.50, photo: 'apple-macbook-air.jpg', tags: ['lifestyle', 'work'], detail: detailLoren, createdAt: date, updatedAt: date },
-        { name: 'TV Samsung 4K UHD', sell: false, price: 4250.00, photo: 'TV-Samsung-49NU7305.jpg', tags: ['lifestyle', 'work'], detail: detailLoren, createdAt: date, updatedAt: date },
+        { name: 'Bicicleta eléctrica Rodars 1000W', sell: true, price: 230.15, photo: 'bicicleta-rodars-1000W.jpg', thumbnail: 'bicicleta-rodars-1000W-tn.jpg', tags: ['lifestyle', 'motor'], detail: detailLoren, createdAt: date, updatedAt: date},
+        { name: 'iPhone 11Pro', sell: true, price: 50.00, photo: 'iPhone-11-pro.jpg', thumbnail: 'iPhone-11-pro-tn.jpg', tags: ['lifestyle', 'mobile'], detail: detailLoren, createdAt: date, updatedAt: date },
+        { name: 'Aston Martin DBS', sell: true, price: 225630.55, photo: 'aston-martin-dbs.jpg', thumbnail: 'aston-martin-dbs-tn.jpg', tags: ['lifestyle', 'motor'], detail: detailLoren, createdAt: date, updatedAt: date },
+        { name: 'MacBook Air', sell: true, price: 250.50, photo: 'apple-macbook-air.jpg', thumbnail: 'apple-macbook-air-tn.jpg', tags: ['lifestyle', 'work'], detail: detailLoren, createdAt: date, updatedAt: date },
+        { name: 'TV Samsung 4K UHD', sell: false, price: 4250.00, photo: 'TV-Samsung-49NU7305.jpg', thumbnail: 'TV-Samsung-49NU7305-tn.jpg', tags: ['lifestyle', 'work'], detail: detailLoren, createdAt: date, updatedAt: date },
     ]);
 }
 
@@ -63,10 +63,6 @@ async function initUsuarios() {
     await Usuario.insertMany([
       { 
         email: 'user@example.es',
-        password: await Usuario.hashPassword('1234'),
-      },
-      { 
-        email: 'sergy.perez@gmail.com',
         password: await Usuario.hashPassword('1234'),
       },
     ]);

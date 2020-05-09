@@ -18,7 +18,7 @@
     <!-- Image and text -->
     <nav class="navbar navbar-dark" style="background-color: rgb(20, 193, 173);">
     
-      <a class="navbar-brand" href="#">
+      <a class="navbar-brand" href="http://localhost:3000">
         <img src="/images/ico.jpg" width="60" height="60" class="d-inline-block align-top" alt="<%= title %>">
         <span class="navbar-title-h1"><%= title %></span>
       </a>
@@ -49,12 +49,17 @@
     <main>
 
       <div class="alert alert-info" role="alert">
-        <%= __('Welcome to') %> <%= title %>!
+        <strong><%= __('Welcome to') %> <%= title %>!</strong>
+        <br />
+        <%= __('Example:') %>&nbsp;
+        <a href="http://localhost:3000/?skip=0&limit=5&sort=name&price=1-500000&tags=lifestyle&sell=true" >
+          http://localhost:3000/?skip=0&limit=5&sort=name&price=1-500000&tags=lifestyle&sell=true
+        </a>
       </div>
       
     
     <% if (data[0].length > 0) { %>
-
+    
     <div class="row row-cols-1 row-cols-md-3">
       <% data[0].forEach(ad => { %>
       <div class="col mb-4">
@@ -65,7 +70,11 @@
             <p class="card-text">Price: <%= ad.price %> &euro;</p>
             <p class="card-text">Type: <%= ((ad.sell) ? 'Sell' : 'Buy') %></p>
             <p class="card-text">Tags: <%= ad.tags %></p>
-            <p class="card-text"><%= ad.detail %></p>
+            <p class="card-text">
+              Thumbnail:<br />
+              <img src="/thumbnails/<%= ad.thumbnail %>" alt="<%= ad.name %>">
+            </p>
+            <p class="card-text">Detail: <%= ad.detail %></p>
           </div>
           <div class="card-footer text-center">
               <% 
@@ -90,10 +99,10 @@
       <p>&#149; <%= __("The sell value can be:") %> true or false</p>
       <p>&#149; <%= __("The tags value can be:") %> <%= data[1] %></p>
       <p>&#149; <%= __("The price value can be:") %></p>
-      <p>&nbsp;&nbsp;&nbsp;&#149; 'ExactPrice': price=50</p>
-      <p>&nbsp;&nbsp;&nbsp;&#149; 'minPrice-maxPrice': price=0-300</p>
-      <p>&nbsp;&nbsp;&nbsp;&#149; 'minPrice-': price=0-</p>
-      <p>&nbsp;&nbsp;&nbsp;&#149; '-maxPrice': price=-300</p>
+      <p>&nbsp;&nbsp;&nbsp;&#149; '<%= __("ExactPrice") %>': price=50</p>
+      <p>&nbsp;&nbsp;&nbsp;&#149; '<%= __("MinPrice") %>-<%= __("MaxPrice") %>': price=0-300</p>
+      <p>&nbsp;&nbsp;&nbsp;&#149; '<%= __("MinPrice") %>-': price=0-</p>
+      <p>&nbsp;&nbsp;&nbsp;&#149; '-<%= __("MaxPrice") %>': price=-300</p>
       <p>&#149; <%= __("The decimal price separator must be") %> '<strong>.</strong>': price=230.15</p>
     </div>
 

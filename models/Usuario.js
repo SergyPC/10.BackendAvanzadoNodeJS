@@ -73,7 +73,7 @@ const usuarioSchema = mongoose.Schema({
 
 usuarioSchema.statics.hashPassword = function(plainPassword) {
   return bcrypt.hash(plainPassword, 10); //10: Nº de rondas de hasheo que queremos que utilice
-}
+};
 
 // // en los métodos de instancia no usar arrow functions (pierdes el this de mongoose)
 // usuarioSchema.methods.sendEmail = function(from, subject, body) {

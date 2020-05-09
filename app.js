@@ -10,10 +10,71 @@ const session = require('express-session');
 
 
 const multer = require('multer');
-//const upload = multer({ dest: 'uploads/' });
-const upload = multer({ dest: './public/images' });
+//const upload = multer({ dest: './public/images' });
 
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './public/images');
+  },
+  filename: function (req, file, cb) {
 
+            
+    
+
+    const projectRoute = `${__dirname}`.split('routes')[0];
+    const imagesRoute = `${projectRoute}\\public\\images\\`;
+    let auxFile = `${imagesRoute}\\${file.originalname}`;
+
+    for(let i=0; i<10; i++) {
+        auxFile = auxFile.replace("\\\\", "\\");
+    }
+    
+    let image = ''; 
+    const fs = require('fs');
+    //Check if the file exists in the current directory.
+    fs.access(auxFile, fs.constants.F_OK, (err) => {
+      console.log(" ");console.log(" ");
+      console.log(`***** ACCEDO A FS DE APP.JS ....`);
+      console.log(" ");console.log(" ");
+      console.log('auxFile:', auxFile);
+      console.log(`${auxFile} (Error: ${err}) -> ${err ? 'does not exist' : 'exists'}`);
+      if(!err) {            
+        // console.log(" ");console.log(" ");
+        //console.log(`Not valid (${file.originalname}). The filename already exists`);
+        console.log(`Not valid (${auxFile}). The filename ${file.originalname} already exists`);
+        // console.log(" ");console.log(" ");
+
+        const err = new Error(`Not valid (${file.originalname}). The filename already exists`);
+        err.status =  422;
+        // return(err);
+        image = 'noImage.jpg';
+        console.log("Accedemos al Callback: cb(err, image);");
+        cb(err, image);
+      }
+      else {
+        image = file.originalname;
+        console.log("Accedemos al Callback: cb(null, file.originalname);");
+        cb(null, file.originalname);
+      }
+
+      // console.log("Accedemos al Callback: cb(null, file.originalname);");
+      // cb(null, file.originalname);
+
+      console.log(" ");console.log(" ");
+      console.log(`SALGO DE FS....`);
+      console.log(" ");console.log(" ");
+      // next();
+    });
+    
+    
+
+    //cb(null, file.originalname);
+
+  },
+});
+console.log("storage:", storage);
+const upload = multer({ storage });
+console.log("upload:", upload);
 
 
 
