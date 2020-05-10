@@ -330,6 +330,7 @@ POST > http://localhost:3000/api/v1/anuncios
     "sell": false,
     "price": 123.10,
     "photo": "noDisponible.jpg",
+    "thumbnail": "noDisponible-tn.jpg",
     "detail": "Compro Disco duro que esté en buen estado.",
     "createdAt": "2020-04-10T14:21:08.918Z",
     "updatedAt": "2020-04-10T14:21:08.918Z"
