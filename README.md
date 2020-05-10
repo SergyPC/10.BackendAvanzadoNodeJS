@@ -399,6 +399,13 @@ PUT > http://localhost:3000/api/v1/anuncios/5e9080d470f90f1ee8ade083
 ```shell
 DELETE > http://localhost:3000/api/v1/anuncios/5e9080d470f90f1ee8ade083
 
+// In the Headers tab:
+  - We will add the following KEY/VALUE that we want to use for that document:
+
+  KEY             VALUE
+  ---------------------
+  Authorization   <tokenString>
+
 // In the Body tab:
   - We will not add any value.
 ```
