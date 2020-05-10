@@ -72,11 +72,11 @@ http://localhost:3000/
 #### - Data required in the body:
 ```shell
 POST > http://localhost:3000/api/v1/loginJWT
+
 // In the Body tab:
-  - We will mark "x-www-form-urlencoded"
   - We will add the following KEY/VALUE that we want to insert for that document:
 
-  (•) x-www-form-urlencoded
+  (•) form-data
         KEY         VALUE
         -----------------
         email       string
@@ -296,6 +296,7 @@ GET > http://localhost:3000/api/v1/anuncios/5e8ca710ebce9562e8cdcb80
 #### - Data required in the body and headers:
 ```shell
 POST > http://localhost:3000/api/v1/anuncios
+
 // In the Headers tab:
   - We will add the following KEY/VALUE that we want to use for that document:
 
@@ -307,7 +308,7 @@ POST > http://localhost:3000/api/v1/anuncios
   - We will mark "form-data"
   - We will add the following KEY/VALUE that we want to insert for that document:
 
-  (•) x-www-form-urlencoded
+  (•) form-data
         KEY     TYPE    VALUE
         -----------------------
         name            Disco duro
@@ -336,28 +337,37 @@ POST > http://localhost:3000/api/v1/anuncios
 }
 ```
 
-<!-- <br />
+<br />
 
 **PUT /api/v1/anuncios/:id** (http://localhost:3000/api/v1/anuncios/5e9080d470f90f1ee8ade083)
+<br />
+**Header: Authorization: token**
 
 > Update an advertisement and return it in JSON format.
 #### - Data required in the body:
 ```shell
 PUT > http://localhost:3000/api/v1/anuncios/5e9080d470f90f1ee8ade083
 
+// In the Headers tab:
+  - We will add the following KEY/VALUE that we want to use for that document:
+
+  KEY             VALUE
+  ---------------------
+  Authorization   <tokenString>
+
 // In the Body tab:
-  - We will mark "x-www-form-urlencoded"
+  - We will mark "form-data"
   - We can update any of the following KEY/VALUE for that document id:
 
-  (•) x-www-form-urlencoded
-        KEY         VALUE
-        -----------------
-        name        Disco duro
-        sell        true
-        price       123.10
-        photo       noDisponible.jpg
-        tags        lifestyle
-        detail      Vendo Disco duro de 2TB (está en buen estado).
+  (•) form-data
+        KEY     TYPE    VALUE
+        -----------------------
+        name            Disco duro
+        sell            false
+        price           123.10
+        photo   file    noDisponible.jpg
+        tags            lifestyle
+        detail          Compro Disco duro que esté en buen estado.
 ```
 #### - Result:
 ```shell
@@ -381,6 +391,8 @@ PUT > http://localhost:3000/api/v1/anuncios/5e9080d470f90f1ee8ade083
 <br />
 
 **DELETE /api/v1/anuncios/:id** (http://localhost:3000/api/v1/anuncios/5e9080d470f90f1ee8ade083)
+<br />
+**Header: Authorization: token**
 
 > Delete an advertisement.
 #### - Data required in the body:
@@ -393,7 +405,7 @@ DELETE > http://localhost:3000/api/v1/anuncios/5e9080d470f90f1ee8ade083
 #### - Result:
 ```shell
 //Returns a Status 200 (Success OK).
-``` -->
+```
 
 <br />
 
