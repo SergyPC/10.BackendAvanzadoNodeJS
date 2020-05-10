@@ -382,6 +382,7 @@ PUT > http://localhost:3000/api/v1/anuncios/5e9080d470f90f1ee8ade083
     "sell": true,
     "price": 123.10,
     "photo": "noDisponible.jpg",
+    "thumbnail": "noDisponible-tn.jpg",
     "detail": "Vendo Disco duro de 2TB (está en buen estado).",
     "createdAt": "2020-04-10T14:21:08.918Z",
     "updatedAt": "2020-04-10T17:02:28.273Z"
