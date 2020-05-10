@@ -24,7 +24,13 @@ const requester = new cote.Requester({ name: 'create thumbnail' });
  * GET /api/v1/anuncios
  * Devuelve una lista de anuncios (el limite máximo por defecto es 100) pudiendo utilizar filtros
  * http://localhost:3000/api/v1/anuncios
+ * http://localhost:3000/api/v1/anuncios?token=
 */
+// Para probar el GET ejecutarlo en Postman
+    // GET > http://localhost:3000/api/v1/anuncios
+    // En la Pestaña Headers (Pasamos el token de autenticación):
+        // KEY		        VALUE
+        // Authorization    <tokenGeneradoAlLogarse>
 router.get('/', async (req, res, next) => { 
     try {
         const name = req.query.name;
@@ -130,7 +136,13 @@ router.get('/', async (req, res, next) => {
  * GET /api/v1/anuncios/:id
  * Busca un anuncio por id y lo devuelve en formato JSON
  * http://localhost:3000/api/v1/anuncios/5e7f5873ef51c93f502f4fa8
+ * http://localhost:3000/api/v1/anuncios/5eb579ad4e96f06e00021f4c?token=
  */
+// Para probar el GET ejecutarlo en Postman
+    // GET > http://localhost:3000/api/v1/anuncios
+    // En la Pestaña Headers (Pasamos el token de autenticación):
+        // KEY		        VALUE
+        // Authorization    <tokenGeneradoAlLogarse>
 router.get('/:id', async (req, res, next) => {
     try {
         const _id = req.params.id;
@@ -164,17 +176,20 @@ router.get('/:id', async (req, res, next) => {
  */
 // Para probar el POST ejecutarlo en Postman
     // POST > http://localhost:3000/api/v1/anuncios
+    // En la Pestaña Headers (Pasamos el token de autenticación):
+        // KEY		        VALUE
+        // Authorization    <tokenGeneradoAlLogarse>
     // En la Pestaña Body (Pasamos la información que queremos insertar para ese documento):
-        // (•) x-www-form-urlencoded
-            // KEY		    VALUE
-            // name	        Camiseta Lacoste
-            // sell 	    true
-            // price        22.15
-            // photo        camiseta.jpg
-            // tags         lifestyle
-            // detail       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.
-            // createdAt    2020-04-05T18:14:40.759Z
-            // updatedAt    2020-04-05T18:14:40.759Z
+        // (•) form-data
+            // KEY		            VALUE
+            // name	                Camiseta Lacoste
+            // sell 	            true
+            // price                22.15
+            // photo (Tipo file)    camiseta.jpg
+            // tags                 lifestyle
+            // detail               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.
+            // createdAt            2020-04-05T18:14:40.759Z (Es generado automáticamente)
+            // updatedAt            2020-04-05T18:14:40.759Z (Es generado automáticamente)
 router.post('/',
     [
         check('name').isString().withMessage('should be string'),
@@ -185,8 +200,11 @@ router.post('/',
     ],
     async (req, res, next) => {
         try {
-            console.log('ENTRO EN router.post(..../1/....)');
-
+            /**
+             * Validamos si el thumbnail ya existe en la carpeta thumbnails
+             * (No debemos permitir sobreescribir un thumbnail ya existe)
+             * Si existe devolvemos un Error 422 y lo sacamos del middleware
+             */
             const file = req.file;
             const arrayThumbnailName = file.originalname.split('.');
             let thumbnailName = '';
@@ -197,8 +215,7 @@ router.post('/',
                     thumbnailName += arrayThumbnailName[i] + '.';
             }
             thumbnailName += '-tn.' + arrayThumbnailName[arrayThumbnailName.length-1];
-
-            console.log("thumbnailName:", thumbnailName);
+            // console.log("thumbnailName:", thumbnailName);
 
             const projectRoute = `${__dirname}`.split('routes')[0];
             const thumbnailsRoute = `${projectRoute}\\public\\thumbnails\\`;
@@ -211,28 +228,17 @@ router.post('/',
                 auxFile = auxFile.replace("\\\\", "\\");
             }
 
+            //Check if the file exists in the current directory:
             const fs = require('fs');
-            //Check if the file exists in the current directory.
             fs.access(auxFile, fs.constants.F_OK, (err) => {
-                console.log(" ");console.log(" ");
-                console.log(`*****ACCEDO A FS....`);
-                // console.log(" ");console.log(" ");
-                // console.log('auxFile:', auxFile);
-                console.log(`${auxFile} (Error: ${err}) -> ${err ? 'does not exist' : 'exists'}`);
+                // console.log(`${auxFile} (Error: ${err}) -> ${err ? 'does not exist' : 'exists'}`);
                 if(!err) {            
-                    // console.log(" ");console.log(" ");
-                    //console.log(`Not valid (${file.originalname}). The filename already exists`);
                     console.log(`Not valid (${auxFile}). The filename already exists`);
-                    // console.log(" ");console.log(" ");
-
                     const err = new Error(`Not valid (${file.originalname}). The filename already exists`);
                     err.status =  422;
                     next(err);
                     return;
                 }
-                console.log(" ");console.log(" ");
-                console.log(`SALGO DE FS....`);
-                console.log(" ");console.log(" ");
                 next();
             });
 
@@ -244,9 +250,6 @@ router.post('/',
     async (req, res, next) => {
     try {
         validationResult(req).throw(); // lanza excepción si hay errores de validación
-        
-        console.log('ENTRO EN router.post(..../2/....)');
-
         let anuncioData = req.body; //recogemos por el body los datos del anuncio a crear
         const tags = req.body.tags;
         const sell = req.body.sell;
@@ -327,92 +330,15 @@ router.post('/',
                 thumbnailName += arrayThumbnailName[i] + '.';
         }
         thumbnailName += '-tn.' + arrayThumbnailName[arrayThumbnailName.length-1];
-
-        console.log("thumbnailName:", thumbnailName);
+        // console.log("thumbnailName:", thumbnailName);
 
         const projectRoute = `${__dirname}`.split('routes')[0];
         const thumbnailsRoute = `${projectRoute}\\public\\thumbnails\\`;
-        //const imagesRoute = `${projectRoute}\\public\\images\\`;
-        
-        // console.log('req.body:', req.body);
-        // console.log('req.file:', req.file);
-        // //console.log("req.file.path:", req.file.path);
-        // console.log("thumbnailsRoute:", `${thumbnailsRoute}`);
-        // console.log("thumbnailName:", `${thumbnailName}`);
-        // console.log("Thumbnail:", `${thumbnailsRoute}${thumbnailName}`);
-        // console.log("jimp.read:", `${file.destination}/${file.originalname}`);
 
-
-        
-        // const fs = require('fs');
-        // //let auxFile = `${imagesRoute}\\${file.originalname}`.replace("\\", "\ ").replace(" ", "");
-        
-        // let auxFile = `${imagesRoute}\\${file.originalname}`;
-        // //let auxFile = `${imagesRoute}\\${thumbnailName}`;
-        
-        // console.log('1)auxFile:', auxFile);
-        // auxFile = auxFile.replace("\\\\", "\\");
-        // console.log('2)auxFile:', auxFile);
-        // auxFile = auxFile.replace("\\\\", "\\");
-        // console.log('3)auxFile:', auxFile);
-        // for(let i=0; i<10; i++) {
-        //     auxFile = auxFile.replace("\\\\", "\\");
-        // }
-
-        
-
-        //auxFile = auxFile.replace(" ", "");
-        //console.log('3)auxFile:', auxFile);
-
-        // const fsPromises = require('fs').promises;
-        // async function openAndClose() {
-        //     let filehandle;
-        //     try {
-        //         filehandle = await fsPromises.open(auxFile, 'r');
-        //         console.log('auxFile:', auxFile);
-        //     } finally {
-        //         console.log('FINALLY...............');
-        //         if (filehandle !== undefined)
-        //             await filehandle.close();
-        //     }
-        // }
-
-        // Check if the file exists in the current directory.
-        // fs.access(auxFile, fs.constants.F_OK, (err) => {
-        //         console.log(" ");console.log(" ");
-        //         console.log(`ACCEDO A FS....`);
-        //         console.log(" ");console.log(" ");
-        //         console.log('auxFile:', auxFile);
-        //         console.log(`${auxFile} (Error: ${err}) -> ${err ? 'does not exist' : 'exists'}`);
-        //         if(!err) {
-                    
-        //             console.log(" ");console.log(" ");
-        //             //console.log(`Not valid (${file.originalname}). The filename already exists`);
-        //             console.log(`Not valid (${auxFile}). The filename already exists`);
-        //             console.log(" ");console.log(" ");
-    
-        //             //const anuncioGuardado = await anuncio.save();
-    
-        //             const err = new Error(`Not valid (${file.originalname}). The filename already exists`);
-        //             err.status =  422;
-        //             next(err);
-        //             return;
-        //         }
-        //         console.log(" ");console.log(" ");
-        //         console.log(`SALGO DE FS....`);
-        //         console.log(" ");console.log(" ");
-
-                
-            
-        // });
-
-        
-
-
-        console.log("JIMP");
-        console.log("file.path:", file.path);
+        // console.log("JIMP");
+        // conconsole.logsole.log("file.path:", file.path);
         jimp.read(file.path, (err, image) => {
-            console.log("Accedo a JIMP (err, image):", "( ", err, " - ", image, " )");
+            // console.log("Accedo a JIMP (err, image):", "( ", err, " - ", image, " )");
             if (err) 
                 throw err;
             image.resize(100, 100)
@@ -424,27 +350,29 @@ router.post('/',
         
         requester.send({
             type: 'save-thumbnail',
-            //imgToSave: `${thumbnailsRoute}${req.file.originalname}`,
+            //filename: `${thumbnailsRoute}${req.file.originalname}`,
             //filename: req.file.originalname,
             filename: thumbnailName,
             path: thumbnailsRoute,
         }, async (result) => {
                 try {
-                    console.log('result:', result);
+                    // console.log('result:', result);
                     anuncioData.thumbnail = result;
-
                     anuncioData.photo = req.file.originalname;
+
                     const date = new Date();
                     anuncioData.createdAt = date;
                     anuncioData.updatedAt = date;
 
-                    const anuncio = new Anuncio(anuncioData);
-                    console.log('Anuncio:', anuncio);
-                    //await anuncio.save();
-
-                    // const anuncio = new Anuncio(anuncioData); // Le pasamos al constructor Anuncio los datos recibidos por el body
-                    // console.log('Anuncio:', anuncio);
+                    // Creamos el objeto en memoria
+                    const anuncio = new Anuncio(anuncioData); // Le pasamos al constructor Anuncio los datos recibidos por el body
+                    
+                    // Guardamos en la BBDD el objeto en memoria
+                    // la función save podría utilizarse con un callback o como una promesa.
+                    // Al utilizarlo como promesa nos devuelve el objeto que finalmente ha añadido a la BBDD.
                     const anuncioGuardado = await anuncio.save();
+
+                    // Y es lo que le vamos a devolver (anuncioGuardado) a quién nos haya hecho la petición al API
                     res.status(201).json( { result: anuncioGuardado } ); // Esta respuesta devuelve un codigo de estado 201: Success - Created
                 } 
                 catch (error) {
@@ -453,33 +381,6 @@ router.post('/',
                 }
             }
         );
-
-        // //jimp.read('./public/images/apple-macbook-air.jpg')
-        // //jimp.read(file.path)
-        // //jimp.read(`${file.destination}/${file.originalname}`)
-        // jimp.read(file.path)
-        // .then(image => {
-        //     return image
-        //     //.resize(100, 100) // resize
-        //     .quality(100) // set JPEG quality
-        //     //.greyscale() // set greyscale
-        //     .write(`${imagesRoute}${req.file.originalname}`); // save
-        //     //.write('./public/images/apple-macbook-air-thumbnail.jpg'); // save
-        // })
-        // .then(image => {
-        //     return image
-        //     .resize(100, 100) // resize
-        //     .quality(90) // set JPEG quality
-        //     //.greyscale() // set greyscale
-        //     .write(`${thumbnailsRoute}${thumbnailName}`); // save
-        //     //.write('./public/Route}${thumbnailName}`); // save
-        //     //.write('./public/images/apple-macbook-air-thumbnail.jpg'); // save
-        // })
-        // .catch(err => {
-        //     console.error(err);
-        // });
-
-
         // const date = new Date();
         // anuncioData.createdAt = date;
         // anuncioData.updatedAt = date;
@@ -510,17 +411,20 @@ router.post('/',
  */
 // Para probar el PUT ejecutarlo en Postman
     // PUT > http://localhost:3000/api/v1/anuncios/5e821c1730858334c486e073
+    // En la Pestaña Headers (Pasamos el token de autenticación):
+        // KEY		        VALUE
+        // Authorization    <tokenGeneradoAlLogarse>
     // En la Pestaña Body (Pasamos la información que queremos actualizar):
-        // (•) x-www-form-urlencoded
-            // KEY		    VALUE
-            // name	        Camiseta Lacoste
-            // sell 	    true
-            // price        22.15
-            // photo        camiseta.jpg
-            // tags         lifestyle
-            // detail       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.
-            // createdAt    2020-04-05T18:14:40.759Z
-            // updatedAt    2020-04-05T18:14:40.759Z
+        // (•) form-data
+            // KEY		            VALUE
+            // name	                Camiseta Lacoste
+            // sell 	            true
+            // price                22.15
+            // photo (Tipo file)    camiseta.jpg
+            // tags                 lifestyle
+            // detail               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.
+            // createdAt            2020-04-05T18:14:40.759Z (Es generado automáticamente)
+            // updatedAt            2020-04-05T18:14:40.759Z (Es generado automáticamente)
 router.put('/:id', async(req, res, next) => {
     try {
         const _id = req.params.id; //recogemos como parámetro el identificador del anuncio que queremos modificar
@@ -604,6 +508,9 @@ router.put('/:id', async(req, res, next) => {
  */
 // Para probar el DELETE ejecutarlo en Postman
     // DELETE > http://localhost:3000/api/v1/anuncios/5e8219748b397949d0ad853b
+    // En la Pestaña Headers (Pasamos el token de autenticación):
+        // KEY		        VALUE
+        // Authorization    <tokenGeneradoAlLogarse>
 router.delete('/:id', async (req, res, next) => {
     try {
         const _id = req.params.id;

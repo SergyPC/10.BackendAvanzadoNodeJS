@@ -65,13 +65,30 @@ http://localhost:3000/
 
 ### Authentication
 
-**POST /api/v1/loginJWT**
-{
-  email: string,
-  password: string
-}
+**POST /api/v1/loginJWT** (http://localhost:3000/api/v1/loginJWT)
 
 > Returns a token (string) of the authenticated user.
+
+#### - Data required in the body:
+```shell
+POST > http://localhost:3000/api/v1/loginJWT
+// In the Body tab:
+  - We will mark "x-www-form-urlencoded"
+  - We will add the following KEY/VALUE that we want to insert for that document:
+
+  (•) x-www-form-urlencoded
+        KEY         VALUE
+        -----------------
+        email       string
+        password    string
+```
+
+<!-- {
+  email: string,
+  password: string
+} -->
+
+
 #### - Result:
 ```shell
 { token: string }
@@ -87,7 +104,7 @@ http://localhost:3000/
 
 **(Default limit is 100)**
 
-#### - Data required in the body:
+#### - Data required in the headers:
 ```shell
 GET > http://localhost:3000/api/v1/anuncios
 
@@ -96,7 +113,7 @@ GET > http://localhost:3000/api/v1/anuncios
 
   KEY             VALUE
   ---------------------
-  Authorization   <token>
+  Authorization   <tokenString>
 ```
 
 #### - Result:
@@ -112,9 +129,10 @@ GET > http://localhost:3000/api/v1/anuncios
     "sell": true,
     "price": 230.15,
     "photo": "bicicleta-rodars-1000W.jpg",
+    "thumbnail": "bicicleta-rodars-1000W-tn.jpg",
     "detail": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    "createdAt": "2020-04-07T16:15:12.284Z",
-    "updatedAt": "2020-04-07T16:15:12.284Z"
+    "createdAt": "2020-05-07T16:15:12.284Z",
+    "updatedAt": "2020-05-07T16:15:12.284Z"
   },
   {
     "tags": [
@@ -126,9 +144,10 @@ GET > http://localhost:3000/api/v1/anuncios
     "sell": true,
     "price": 50,
     "photo": "iPhone-11-pro.jpg",
+    "thumbnail": "iPhone-11-pro-tn.jpg",
     "detail": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    "createdAt": "2020-04-07T16:15:12.284Z",
-    "updatedAt": "2020-04-07T16:15:12.284Z"
+    "createdAt": "2020-05-07T16:15:12.284Z",
+    "updatedAt": "2020-05-07T16:15:12.284Z"
   },
   {
     "tags": [
@@ -140,9 +159,10 @@ GET > http://localhost:3000/api/v1/anuncios
     "sell": true,
     "price": 225630.55,
     "photo": "aston-martin-dbs.jpg",
+    "thumbnail": "aston-martin-dbs-tn.jpg",
     "detail": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    "createdAt": "2020-04-07T16:15:12.284Z",
-    "updatedAt": "2020-04-07T16:15:12.284Z"
+    "createdAt": "2020-05-07T16:15:12.284Z",
+    "updatedAt": "2020-05-07T16:15:12.284Z"
   },
   {
     "tags": [
@@ -154,9 +174,10 @@ GET > http://localhost:3000/api/v1/anuncios
     "sell": false,
     "price": 250.5,
     "photo": "apple-macbook-air.jpg",
+    "thumbnail": "apple-macbook-air-tn.jpg",
     "detail": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    "createdAt": "2020-04-07T16:15:12.284Z",
-    "updatedAt": "2020-04-07T16:15:12.284Z"
+    "createdAt": "2020-05-07T16:15:12.284Z",
+    "updatedAt": "2020-05-07T16:15:12.284Z"
   },
   {
     "tags": [
@@ -168,9 +189,10 @@ GET > http://localhost:3000/api/v1/anuncios
     "sell": false,
     "price": 4250,
     "photo": "TV-Samsung-49NU7305.jpg",
+    "thumbnail": "TV-Samsung-49NU7305-tn.jpg",
     "detail": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    "createdAt": "2020-04-07T16:15:12.284Z",
-    "updatedAt": "2020-04-07T16:15:12.284Z"
+    "createdAt": "2020-05-07T16:15:12.284Z",
+    "updatedAt": "2020-05-07T16:15:12.284Z"
   }
 ]
 ```
@@ -226,8 +248,22 @@ http://localhost:3000/?skip=0&limit=5&sort=name&price=1-5000&tags=lifestyle
 <br />
 
 **GET /api/v1/anuncios/:id** (http://localhost:3000/api/v1/anuncios/5e8ca710ebce9562e8cdcb80)
+<br />
+**Header: Authorization: token**
 
 > Return an advertisement in JSON format.
+
+#### - Data required in the headers:
+```shell
+GET > http://localhost:3000/api/v1/anuncios/5e8ca710ebce9562e8cdcb80
+
+// In the Headers tab:
+  - We will add the following KEY/VALUE that we want to use for that document:
+
+  KEY             VALUE
+  ---------------------
+  Authorization   <tokenString>
+```
 
 #### - Result:
 ```shell
@@ -242,9 +278,10 @@ http://localhost:3000/?skip=0&limit=5&sort=name&price=1-5000&tags=lifestyle
     "sell": true,
     "price": 50,
     "photo": "iPhone-11-pro.jpg",
+    "thumbnail": "bicicleta-rodars-1000W-tn.jpg",
     "detail": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    "createdAt": "2020-04-07T16:15:12.284Z",
-    "updatedAt": "2020-04-07T16:15:12.284Z"
+    "createdAt": "2020-05-07T16:15:12.284Z",
+    "updatedAt": "2020-05-07T16:15:12.284Z"
   }
 }
 ```
@@ -252,25 +289,33 @@ http://localhost:3000/?skip=0&limit=5&sort=name&price=1-5000&tags=lifestyle
 <br />
 
 **POST /api/v1/anuncios** (http://localhost:3000/api/v1/anuncios)
+<br />
+**Header: Authorization: token**
 
 > Insert an advertisement and return it in JSON format.
-#### - Data required in the body:
+#### - Data required in the body and headers:
 ```shell
 POST > http://localhost:3000/api/v1/anuncios
+// In the Headers tab:
+  - We will add the following KEY/VALUE that we want to use for that document:
+
+  KEY             VALUE
+  ---------------------
+  Authorization   <tokenString>
 
 // In the Body tab:
-  - We will mark "x-www-form-urlencoded"
+  - We will mark "form-data"
   - We will add the following KEY/VALUE that we want to insert for that document:
 
   (•) x-www-form-urlencoded
-        KEY         VALUE
-        -----------------
-        name        Disco duro
-        sell        false
-        price       123.10
-        photo       noDisponible.jpg
-        tags        lifestyle
-        detail      Compro Disco duro que esté en buen estado.
+        KEY     TYPE    VALUE
+        -----------------------
+        name            Disco duro
+        sell            false
+        price           123.10
+        photo   file    noDisponible.jpg
+        tags            lifestyle
+        detail          Compro Disco duro que esté en buen estado.
 ```
 #### - Result:
 ```shell
@@ -291,7 +336,7 @@ POST > http://localhost:3000/api/v1/anuncios
 }
 ```
 
-<br />
+<!-- <br />
 
 **PUT /api/v1/anuncios/:id** (http://localhost:3000/api/v1/anuncios/5e9080d470f90f1ee8ade083)
 
@@ -348,7 +393,7 @@ DELETE > http://localhost:3000/api/v1/anuncios/5e9080d470f90f1ee8ade083
 #### - Result:
 ```shell
 //Returns a Status 200 (Success OK).
-```
+``` -->
 
 <br />
 

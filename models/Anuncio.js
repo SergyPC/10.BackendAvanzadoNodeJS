@@ -10,17 +10,15 @@ const mongoose = require('mongoose');
 // 1) Crear un esquema
 // https://mongoosejs.com/docs/schematypes.html
 const anuncioSchema = mongoose.Schema({
-    name: { type: String, index: true },
+    name: { type: String, index: true }, //Crearía un indice por name
 	sell: { type: Boolean, index: true }, //true (sell) or false (buy)
 	price: { type: Number, index: true },
-    photo: { type: String, unique: true },
+    photo: { type: String, unique: true }, //Crearía un indice por photo, Pero además No permite añadir duplicados por photo
     thumbnail: String,
     tags: { type: [String], index: true },
     detail: String,
     createdAt: Date,
     updatedAt: Date,
-    //email: { type: String, index: true }, //Crearía un indice por email
-    //email: { type: String, unique: true }, //Crearía un indice por email. Pero además No permite añadir duplicados por email
     //message: mongoose.Schema.Types.Mixed, //Recogerá cualquier tipología en esta propiedad
 });
 

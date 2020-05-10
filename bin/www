@@ -5,7 +5,6 @@ require('dotenv').config();
 /**
  * Module dependencies.
  */
-
 var app = require('../app'); //Carga mi aplicación app.js
 var debug = require('debug')('nodepop:server');
 var http = require('http'); //Carga la librería http
@@ -19,10 +18,6 @@ responder.on('save-thumbnail', (req, done) => { // Logica del servicio
     // console.log('req.filename:', req.filename);
     const result = req.filename;
     done(result);
-
-    // console.log('req.imgToSave:', req.imgToSave);
-    // const result = req.imgToSave;
-    // done(result);
   } 
   catch (error) {
     console.log(error);
@@ -32,20 +27,17 @@ responder.on('save-thumbnail', (req, done) => { // Logica del servicio
 /**
  * Get port from environment and store in Express.
  */
-
 var port = normalizePort(process.env.PORT || '3000'); //Definimos el puerto: Bien por variable de entorno (process.env.PORT) y si no está definida ponemos 3000
 app.set('port', port); //Establecemos una variable de Express para pasarle el puerto
 
 /**
  * Create HTTP server.
  */
-
 var server = http.createServer(app); //Creamos un servidor
 
 /**
  * Listen on provided port, on all network interfaces.
  */
-
 server.listen(port); //Arrancamos el servidor escuchando por el puerto especificado
 //Aquí utiliza un event emiter y podemos emitir cosas o nos podemos suscribir a diferentes métodos:
 server.on('error', onError); //Cuando ocurra en este servidor un evento error vas a ejcutar la función onError
@@ -54,7 +46,6 @@ server.on('listening', onListening);
 /**
  * Normalize a port into a number, string, or false.
  */
-
 function normalizePort(val) {
   var port = parseInt(val, 10);
 
@@ -74,7 +65,6 @@ function normalizePort(val) {
 /**
  * Event listener for HTTP server "error" event.
  */
-
 function onError(error) {
   if (error.syscall !== 'listen') {
     throw error;
@@ -102,7 +92,6 @@ function onError(error) {
 /**
  * Event listener for HTTP server "listening" event.
  */
-
 function onListening() {
   var addr = server.address();
   var bind = typeof addr === 'string'

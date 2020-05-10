@@ -5,10 +5,6 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const session = require('express-session');
 
-
-
-
-
 const multer = require('multer');
 //const upload = multer({ dest: './public/images' });
 
@@ -17,10 +13,6 @@ const storage = multer.diskStorage({
     cb(null, './public/images');
   },
   filename: function (req, file, cb) {
-
-            
-    
-
     const projectRoute = `${__dirname}`.split('routes')[0];
     const imagesRoute = `${projectRoute}\\public\\images\\`;
     let auxFile = `${imagesRoute}\\${file.originalname}`;
@@ -33,50 +25,26 @@ const storage = multer.diskStorage({
     const fs = require('fs');
     //Check if the file exists in the current directory.
     fs.access(auxFile, fs.constants.F_OK, (err) => {
-      console.log(" ");console.log(" ");
-      console.log(`***** ACCEDO A FS DE APP.JS ....`);
-      console.log(" ");console.log(" ");
-      console.log('auxFile:', auxFile);
-      console.log(`${auxFile} (Error: ${err}) -> ${err ? 'does not exist' : 'exists'}`);
+      // console.log(`${auxFile} (Error: ${err}) -> ${err ? 'does not exist' : 'exists'}`);
       if(!err) {            
-        // console.log(" ");console.log(" ");
-        //console.log(`Not valid (${file.originalname}). The filename already exists`);
         console.log(`Not valid (${auxFile}). The filename ${file.originalname} already exists`);
-        // console.log(" ");console.log(" ");
-
         const err = new Error(`Not valid (${file.originalname}). The filename already exists`);
         err.status =  422;
-        // return(err);
         image = 'noImage.jpg';
-        console.log("Accedemos al Callback: cb(err, image);");
         cb(err, image);
       }
       else {
         image = file.originalname;
-        console.log("Accedemos al Callback: cb(null, file.originalname);");
         cb(null, file.originalname);
       }
-
-      // console.log("Accedemos al Callback: cb(null, file.originalname);");
       // cb(null, file.originalname);
-
-      console.log(" ");console.log(" ");
-      console.log(`SALGO DE FS....`);
-      console.log(" ");console.log(" ");
-      // next();
     });
-    
-    
-
     //cb(null, file.originalname);
-
   },
 });
-console.log("storage:", storage);
+// console.log("storage:", storage);
 const upload = multer({ storage });
-console.log("upload:", upload);
-
-
+// console.log("upload:", upload);
 
 // var indexRouter = require('./routes/index');
 // var usersRouter = require('./routes/users');
@@ -139,10 +107,7 @@ const jwtAuth = require('./lib/JwtAuth'); //Cargo mi generador de middlewares de
 app.use('/api/v1/anuncios', upload.single('photo'), jwtAuth(), require('./routes/api/v1/anuncios'));
 //app.use('/api/v1/anuncios', upload.single('thumbnail'), jwtAuth(), require('./routes/api/v1/anuncios'));
 
-
 app.use('/api/v1/loginJWT', loginController.postJWT);
-
-
 
 app.use('/api/v1/tags', require('./routes/api/v1/tags'));
 
@@ -153,7 +118,6 @@ app.use('/api/v1/tags', require('./routes/api/v1/tags'));
  */
 app.use(session({
   name: 'nodepop-session',
-  //secret: 's1df-3lsa5d$j8flh-a0sjf=l9as',
   secret: process.env.SESSION_SECRET,
   saveUninitialized: true,
   resave: false,
@@ -177,7 +141,6 @@ app.use(session({
 // app.use('/', indexRouter);
 // app.use('/users', usersRouter);
 const sessionAuth = require('./lib/SessionAuth');
-
 
 // Hacer disponible el objeto de sesión en las vistas:
 app.use((req, res, next) => {
